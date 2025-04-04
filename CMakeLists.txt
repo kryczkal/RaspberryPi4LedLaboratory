@@ -1,16 +1,61 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.30)
+set(PROJECT_NAME "Led-Project")
+set(PROJECT_DESCRIPTION "Something with leds, don't know yet")
+set(PROJECT_VERSION "0.1.0")
 
-project(led-project LANGUAGES CXX)
+project(${PROJECT_NAME} VERSION ${PROJECT_VERSION} DESCRIPTION ${PROJECT_DESCRIPTION} LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+# ------------------------------------------------------------------------------ #
+#  Compiler & Standard
+# ------------------------------------------------------------------------------ #
+
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(led-project main.cpp)
+# ------------------------------------------------------------------------------ #
+#  Dependencies
+# ------------------------------------------------------------------------------ #
 
-# --- Installation ---
+add_subdirectory(cxx-deps)
+
+# ------------------------------------------------------------------------------ #
+#  Source Files
+# ------------------------------------------------------------------------------ #
+
+file(GLOB_RECURSE
+    SRC_FILES
+    src/*.cpp
+    src/*.hpp
+    main.cpp
+)
+
+# ------------------------------------------------------------------------------ #
+#  Executable
+# ------------------------------------------------------------------------------ #
+
+add_executable(
+    ${PROJECT_NAME}
+    ${SRC_FILES}
+)
+
+# ------------------------------------------------------------------------------ #
+#  Include Directories & Link Libraries
+# ------------------------------------------------------------------------------ #
+
+target_link_libraries(
+    ${PROJECT_NAME}
+    PRIVATE
+        libCPeriphery
+)
+
+# ------------------------------------------------------------------------------ #
+#  Installation
+# ------------------------------------------------------------------------------ #
+
 # Install the target 'led-project' to the 'bin' directory relative
 # to the CMAKE_INSTALL_PREFIX provided by Buildroot.
-install(TARGETS led-project DESTINATION bin)
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
 
 # install(TARGETS mylibrary DESTINATION lib)
 # install(FILES myheader.h DESTINATION include)
