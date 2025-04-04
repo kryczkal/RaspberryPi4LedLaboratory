@@ -6,9 +6,10 @@ FetchContent_Declare(
         c_periphery
         GIT_REPOSITORY https://github.com/vsergeev/c-periphery.git
         GIT_TAG v2.4.3
-        CMAKE_ARGS -DBUILD_SHARED_LIBS=OFF
-        -DBUILD_TESTS=OFF
-        -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
+        CMAKE_ARGS
+            "-DBUILD_SHARED_LIBS=ON" # <--- Changed to ON
+            "-DBUILD_TESTS=OFF"
+            "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}"
 )
 FetchContent_MakeAvailable(c_periphery)
 
@@ -23,3 +24,9 @@ target_include_directories(libCPeriphery INTERFACE
 target_link_libraries(libCPeriphery INTERFACE
         periphery
 )
+
+# ------------------------------------------------------------------------------ #
+#  Installation
+# ------------------------------------------------------------------------------ #
+
+install(TARGETS periphery LIBRARY DESTINATION lib)
