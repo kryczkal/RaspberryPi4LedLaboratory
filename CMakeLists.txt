@@ -60,9 +60,9 @@ target_link_libraries(
 # Install the target 'led-project' to the 'bin' directory relative
 # to the CMAKE_INSTALL_PREFIX provided by Buildroot.
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
-# Install the library 'libCPeriphery' to the 'lib' directory
-# relative to the CMAKE_INSTALL_PREFIX provided by Buildroot.
-install(TARGETS libCPeriphery DESTINATION lib)
+
+# Should be installed by buildroot
+#install(TARGETS libCPeriphery DESTINATION lib)
 
 # install(TARGETS mylibrary DESTINATION lib)
 # install(FILES myheader.h DESTINATION include)

@@ -146,9 +146,9 @@ int main() {
               }
             }
           }
+          last_press_time = now;
           continue;
         }
-
         last_press_time = now;
 
         for (size_t i = 0; i < button_handles.size(); ++i) {
