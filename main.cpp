@@ -18,6 +18,8 @@ const unsigned int BTN_PREV_PATTERN_PIN = BUTTON_PINS[0];
 const unsigned int BTN_NEXT_PATTERN_PIN = BUTTON_PINS[1];
 const unsigned int BTN_SPEED_DOWN_PIN = BUTTON_PINS[2];
 const unsigned int BTN_SPEED_UP_PIN = BUTTON_PINS[3];
+const int POLL_TIMEOUT_MS = 100;
+const std::chrono::milliseconds DEBOUNCE_DELAY_MS(200);
 
 std::atomic<bool> keep_running(true);
 
@@ -116,31 +118,31 @@ int main() {
     std::cout << "Starting button polling loop. Press Ctrl+C to exit."
               << std::endl;
     std::chrono::milliseconds last_press_time = std::chrono::milliseconds(0);
-    const std::chrono::milliseconds debounce_delay(200);
 
     while (keep_running.load()) {
       bool gpios_ready[BUTTON_PINS.size()];
 
       int ret = gpio_poll_multiple(button_handles.data(), button_handles.size(),
-                                   100, gpios_ready);
+                                   POLL_TIMEOUT_MS, gpios_ready);
 
       if (ret < 0) {
-        fprintf(stderr, "gpio_poll_multiple() error: %s\n",
-                gpio_errmsg(button_handles[0]));
+        std::cerr << "gpio_poll_multiple() error: "
+                  << gpio_errmsg(button_handles[0]) << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         continue;
       } else if (ret > 0) {
         auto now = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::steady_clock::now().time_since_epoch());
-        if (now - last_press_time < debounce_delay) {
+        if (now - last_press_time < DEBOUNCE_DELAY_MS) {
           for (size_t i = 0; i < button_handles.size(); ++i) {
             if (gpios_ready[i]) {
               gpio_edge_t edge;
               uint64_t timestamp;
 
               if (gpio_read_event(button_handles[i], &edge, &timestamp) < 0) {
-                fprintf(stderr,
-                        "Error reading event after debounce on GPIO %u: %s\n",
+                std::cerr << "Error reading event after debounce on GPIO "
+                          << gpio_line(button_handles[i]) << ": "
+                          << gpio_errmsg(button_handles[i]) << std::endl;
                         gpio_line(button_handles[i]),
                         gpio_errmsg(button_handles[i]));
               }
@@ -159,8 +161,8 @@ int main() {
             gpio_edge_t edge;
             uint64_t timestamp;
             if (gpio_read_event(button_handles[i], &edge, &timestamp) < 0) {
-              fprintf(stderr, "gpio_read_event() error on GPIO %u: %s\n", line,
-                      gpio_errmsg(button_handles[i]));
+              std::cerr << "Error reading event on GPIO " << line << ": "
+                        << gpio_errmsg(button_handles[i]) << std::endl;
             } else {
               if (edge == GPIO_EDGE_FALLING) {
                 if (button_actions.count(line)) {
