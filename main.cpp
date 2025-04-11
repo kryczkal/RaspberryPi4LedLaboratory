@@ -143,8 +143,6 @@ int main() {
                 std::cerr << "Error reading event after debounce on GPIO "
                           << gpio_line(button_handles[i]) << ": "
                           << gpio_errmsg(button_handles[i]) << std::endl;
-                        gpio_line(button_handles[i]),
-                        gpio_errmsg(button_handles[i]));
               }
             }
           }
