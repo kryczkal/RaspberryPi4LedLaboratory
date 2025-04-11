@@ -8,7 +8,7 @@
 #include <thread>
 #include <atomic>
 #include <mutex>
-#include <functional> 
+#include <functional>
 
 using LedStates = std::vector<bool>;
 using LedPattern = std::vector<LedStates>;

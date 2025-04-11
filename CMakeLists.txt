@@ -30,6 +30,10 @@ file(GLOB_RECURSE
     main.cpp
 )
 
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
 # ------------------------------------------------------------------------------ #
 #  Executable
 # ------------------------------------------------------------------------------ #
@@ -56,6 +60,9 @@ target_link_libraries(
 # Install the target 'led-project' to the 'bin' directory relative
 # to the CMAKE_INSTALL_PREFIX provided by Buildroot.
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+# Install the library 'libCPeriphery' to the 'lib' directory
+# relative to the CMAKE_INSTALL_PREFIX provided by Buildroot.
+install(TARGETS libCPeriphery DESTINATION lib)
 
 # install(TARGETS mylibrary DESTINATION lib)
 # install(FILES myheader.h DESTINATION include)

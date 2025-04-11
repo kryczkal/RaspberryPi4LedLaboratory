@@ -4,8 +4,8 @@
 #include <gpio.h>
 #include <string>
 #include <stdexcept>
-#include <cstdio> 
-
+#include <cstdio>
+#include <utility>
 
 class GpioWrapper {
 private:
