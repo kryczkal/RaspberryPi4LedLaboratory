@@ -98,7 +98,8 @@ int main() {
     for (unsigned int pin : BUTTON_PINS) {
       GpioWrapper button;
       if (!button.open_advanced(GPIO_CHIP, pin, &button_config)) {
-        std::cerr << "Failed to open button GPIO " << pin << " on " << GPIO_CHIP << std::endl;
+        std::cerr << "Failed to open button GPIO " << pin << " on " << GPIO_CHIP
+                  << std::endl;
         return 1;
       }
 
@@ -119,7 +120,8 @@ int main() {
 
     led_controller.startAnimation();
 
-    std::cout << "Starting button polling loop. Press Ctrl+C to exit." << std::endl;
+    std::cout << "Starting button polling loop. Press Ctrl+C to exit."
+              << std::endl;
 
     while (keep_running.load()) {
       bool gpios_ready[BUTTON_PINS.size()];
@@ -131,7 +133,8 @@ int main() {
 
       if (ret < 0) {
         std::cerr << "gpio_poll_multiple() error: "
-                  << (button_handles.empty() ? "No handles" : gpio_errmsg(button_handles[0]))
+                  << (button_handles.empty() ? "No handles"
+                                             : gpio_errmsg(button_handles[0]))
                   << std::endl;
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         continue;
@@ -154,12 +157,11 @@ int main() {
 
             // Debounce check: Ignore events too close to the last valid one
             if (now - state.last_event_time < DEBOUNCE_DURATION) {
-              state.last_event_time = now; // Extend debounce window if noisy
               state.debounce_active = true;
               continue;
             }
 
-            if(state.debounce_active) {
+            if (state.debounce_active) {
               state.debounce_active = false;
             }
 
@@ -167,7 +169,8 @@ int main() {
 
             if (edge == GPIO_EDGE_FALLING) {
               if (!state.is_pressed) {
-                std::cout << "Button Press Detected on GPIO " << line << std::endl;
+                std::cout << "Button Press Detected on GPIO " << line
+                          << std::endl;
                 state.is_pressed = true;
                 if (button_actions.count(line)) {
                   button_actions[line]();
@@ -183,12 +186,12 @@ int main() {
       }
 
       // Check if any debounce period naturally ended
-      for(auto & [pin, state] : button_states) {
-        if (state.debounce_active && (now - state.last_event_time >= DEBOUNCE_DURATION)) {
+      for (auto &[pin, state] : button_states) {
+        if (state.debounce_active &&
+            (now - state.last_event_time >= DEBOUNCE_DURATION)) {
           state.debounce_active = false;
         }
       }
-
     }
 
     std::cout << "Stopping animation..." << std::endl;
