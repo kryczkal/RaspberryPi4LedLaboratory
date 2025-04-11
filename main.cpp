@@ -86,7 +86,7 @@ int main() {
     gpio_config_t button_config = {};
     button_config.direction = GPIO_DIR_IN;
     button_config.edge = GPIO_EDGE_FALLING;
-    button_config.bias = GPIO_BIAS_DEFAULT;
+    button_config.bias = GPIO_BIAS_PULL_UP;
     button_config.drive = GPIO_DRIVE_DEFAULT;
     button_config.inverted = false;
     button_config.label = "LedProjectButton";
