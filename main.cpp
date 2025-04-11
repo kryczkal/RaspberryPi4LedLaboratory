@@ -155,6 +155,9 @@ int main() {
             unsigned int line = gpio_line(button_handles[i]);
             ButtonState &state = button_states[line];
 
+            if(edge == GPIO_EDGE_RISING) {
+              state.is_pressed = false;
+            }
             // Debounce check: Ignore events too close to the last valid one
             if (now - state.last_event_time < DEBOUNCE_DURATION) {
               state.debounce_active = true;
@@ -190,6 +193,7 @@ int main() {
         if (state.debounce_active &&
             (now - state.last_event_time >= DEBOUNCE_DURATION)) {
           state.debounce_active = false;
+          state.is_pressed = false;
         }
       }
     }
